@@ -1,12 +1,9 @@
 package com.cinema.services.crud.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.cinema.models.Client;
-import com.cinema.repositories.AssisterRepository;
 import com.cinema.services.crud.CRUDService;
 
 public abstract class CRUDServiceImpl<T> implements CRUDService<T>{

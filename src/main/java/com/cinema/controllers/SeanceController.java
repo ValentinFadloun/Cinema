@@ -41,7 +41,7 @@ public class SeanceController {
 	}
 	
 	@GetMapping("")
-	public List<Seance> findAll() {
+	public Iterable<Seance> findAll() {
 		return this.service.findAll();
 	}
 	
@@ -53,5 +53,10 @@ public class SeanceController {
 	@PostMapping("{id}/assister/{uid}")
 	public void addAssister(@PathVariable String id,@PathVariable String uid) {
 		this.service.addAssister(id, uid);
+	}
+	
+	@GetMapping("film/{titre}")
+	public List<Seance> findByFilmNom(@PathVariable String titre){
+		return this.service.findByFilmNom(titre);
 	}
 }

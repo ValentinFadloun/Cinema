@@ -41,7 +41,7 @@ public class ClientController {
 	}
 	
 	@GetMapping("")
-	public List<Client> findAll() {
+	public Iterable<Client> findAll() {
 		return this.service.findAll();
 	}
 	

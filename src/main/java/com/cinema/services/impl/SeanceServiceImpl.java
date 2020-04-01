@@ -1,5 +1,6 @@
 package com.cinema.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,50 +10,30 @@ import com.cinema.exceptions.ClientNotFoundException;
 import com.cinema.exceptions.SeanceNotFoundException;
 import com.cinema.models.Assister;
 import com.cinema.models.Client;
+import com.cinema.models.Film;
 import com.cinema.models.Seance;
 import com.cinema.repositories.SeanceRepository;
 import com.cinema.services.AssisterService;
 import com.cinema.services.ClientService;
+import com.cinema.services.FilmService;
 import com.cinema.services.SeanceService;
+import com.cinema.services.crud.impl.CRUDServiceImpl;
 
 @Service
-public class SeanceServiceImpl implements SeanceService {
+public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements SeanceService {
 
-	@Autowired
-	private SeanceRepository repo;
 	@Autowired
 	private AssisterService assisterService;
 	@Autowired
 	private ClientService clientService;
+	@Autowired
+	private FilmService filmService;
+	@Autowired
+	private SeanceRepository repo;
 	
-	@Override
-	public Seance save(Seance s) {
-		// TODO Auto-generated method stub
-		return this.repo.save(s);
-	}
-
-	@Override
-	public Seance update(Seance s) {
-		// TODO Auto-generated method stub
-		return this.repo.save(s);
-	}
-
-	@Override
-	public void delete(String id) {
-		// TODO Auto-generated method stub
-		this.repo.deleteById(id);
-	}
-
-	@Override
-	public List<Seance> findAll() {
-		// TODO Auto-generated method stub
-		return this.repo.findAll();
-	}
-
-	@Override
-	public Optional<Seance> findById(String id) {
-		// TODO Auto-generated method stub
-		return this.repo.findById(id);
+	public SeanceServiceImpl(SeanceRepository repo) {
+		super(repo);
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -79,6 +60,18 @@ public class SeanceServiceImpl implements SeanceService {
 			throw new SeanceNotFoundException(idSeance);
 		}
 		return res;
+	}
+
+	@Override
+	public List<Seance> findByFilmNom(String titre) {
+		// TODO Auto-generated method stub
+		List<Film> listFilm = filmService.findAllByTitre(titre);
+		List<Seance> listSeance = new ArrayList<Seance>();
+		for (Film f : listFilm) {
+			List<Seance> listSeanceFilm = this.repo.findAllByFilm(f);
+			listSeance.addAll(listSeanceFilm);
+		}
+		return listSeance;
 	}
 
 }
