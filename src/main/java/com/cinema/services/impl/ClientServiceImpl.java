@@ -27,4 +27,8 @@ public class ClientServiceImpl extends CRUDServiceImpl<Client> implements Client
 		return this.repo.findAllByNom(nom);
 	}
 
+	@Override
+	public int findClientAge(Client c) {
+		
+	}
 }
