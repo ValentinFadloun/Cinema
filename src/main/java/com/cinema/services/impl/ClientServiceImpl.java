@@ -1,5 +1,6 @@
 package com.cinema.services.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,6 @@ public class ClientServiceImpl extends CRUDServiceImpl<Client> implements Client
 
 	@Override
 	public int findClientAge(Client c) {
-		
+		return LocalDate.now().compareTo(c.getNaissance());
 	}
 }

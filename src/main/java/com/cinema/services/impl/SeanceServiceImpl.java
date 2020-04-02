@@ -49,7 +49,7 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 			if(seance.isPresent()) {
 				List<Assister> listClient = seance.get().getClients();
 				Optional<Client> client = clientService.findById(idClient);
-				if(client.isPresent()) {
+				if(client.isPresent() && clientService.findClientAge(client.get()) > filmService.findAgeLimite(seance.get().getFilm())) {
 					Assister assister = new Assister();
 					assister.setClient(client.get());
 					assisterService.setPrix(seance.get(), client.get(), assister);

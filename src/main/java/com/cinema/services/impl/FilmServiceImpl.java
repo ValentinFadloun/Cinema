@@ -43,4 +43,10 @@ public class FilmServiceImpl extends CRUDServiceImpl<Film> implements FilmServic
 		}
 		return recette;
 	}
+
+	@Override
+	public int findAgeLimite(Film f) {
+		// TODO Auto-generated method stub
+		return f.getAgeLimite();
+	}
 }
