@@ -8,4 +8,5 @@ import com.cinema.services.crud.CRUDService;
 public interface FilmService extends CRUDService<Film>{
 	
 	public List<Film> findAllByTitre(String titre);
+	public float recetteFilm(String id);
 }

@@ -35,6 +35,11 @@ public class FilmController {
 		return this.service.update(f);
 	}
 	
+	@DeleteMapping("")
+	public void deleteFilm(@RequestBody Film f) {
+		this.service.delete(f);
+	}
+	
 	@DeleteMapping("{id}")
 	public void deleteFilm(@PathVariable String id) {
 		this.service.delete(id);
@@ -56,8 +61,7 @@ public class FilmController {
 	}
 	
 	@GetMapping("{id}/recette")
-	public int recetteFilm(@PathVariable String id) {
-		
-		return 0;
+	public float recetteFilm(@PathVariable String id) {
+		return this.service.recetteFilm(id);
 	}
 }

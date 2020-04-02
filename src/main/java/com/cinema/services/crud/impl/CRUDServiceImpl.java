@@ -15,15 +15,20 @@ public abstract class CRUDServiceImpl<T> implements CRUDService<T>{
 		this.repo = repo;
 	}
 	
-	public T save(T c) {
+	public T save(T objet) {
 		// TODO Auto-generated method stub
-		return this.repo.save(c);
+		return this.repo.save(objet);
 	}
 
 	@Override
-	public T update(T c) {
+	public T update(T objet) {
 		// TODO Auto-generated method stub
-		return this.repo.save(c);
+		return this.repo.save(objet);
+	}
+	
+	@Override
+	public void delete(T objet) {
+		this.repo.delete(objet);
 	}
 
 	@Override

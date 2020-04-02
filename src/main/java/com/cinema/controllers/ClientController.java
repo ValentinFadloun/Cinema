@@ -35,6 +35,11 @@ public class ClientController {
 		return this.service.update(c);
 	}
 	
+	@DeleteMapping("")
+	public void deleteClient(@RequestBody Client c) {
+		this.service.delete(c);
+	}
+	
 	@DeleteMapping("{id}")
 	public void deleteClient(@PathVariable String id) {
 		this.service.delete(id);

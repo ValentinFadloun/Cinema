@@ -1,5 +1,6 @@
 package com.cinema.services.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,11 +12,13 @@ import com.cinema.exceptions.SeanceNotFoundException;
 import com.cinema.models.Assister;
 import com.cinema.models.Client;
 import com.cinema.models.Film;
+import com.cinema.models.Salle;
 import com.cinema.models.Seance;
 import com.cinema.repositories.SeanceRepository;
 import com.cinema.services.AssisterService;
 import com.cinema.services.ClientService;
 import com.cinema.services.FilmService;
+import com.cinema.services.SalleService;
 import com.cinema.services.SeanceService;
 import com.cinema.services.crud.impl.CRUDServiceImpl;
 
@@ -29,6 +32,8 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 	@Autowired
 	private FilmService filmService;
 	@Autowired
+	private SalleService salleService;
+	@Autowired
 	private SeanceRepository repo;
 	
 	public SeanceServiceImpl(SeanceRepository repo) {
@@ -37,33 +42,33 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 	}
 
 	@Override
-	public Seance addAssister(String idSeance, String idClient) {
-		// TODO Auto-generated method stub
-		Optional<Seance> seance = this.findById(idSeance);
+	public Seance addClientToSeance(String idSeance, String idClient) {
 		Seance res = null;
-		if(seance.isPresent()) {
-			List<Assister> listClient = seance.get().getClients();
-			Optional<Client> client = clientService.findById(idClient);
-			if(client.isPresent()) {
-				Assister assister = new Assister();
-				assister.setClient(client.get());
-				assisterService.setPrix(seance.get(), client.get(), assister);
-				listClient.add(assister);
-				/*listClient.add(client.get());*/
-				seance.get().setClients(listClient);
-				this.update(seance.get());
-				res = seance.get();
+		if(this.placesSeance(idSeance) > 0) {
+			Optional<Seance> seance = this.findById(idSeance);
+			if(seance.isPresent()) {
+				List<Assister> listClient = seance.get().getClients();
+				Optional<Client> client = clientService.findById(idClient);
+				if(client.isPresent()) {
+					Assister assister = new Assister();
+					assister.setClient(client.get());
+					assisterService.setPrix(seance.get(), client.get(), assister);
+					listClient.add(assister);
+					seance.get().setClients(listClient);
+					this.update(seance.get());
+					res = seance.get();
+				}else {
+					throw new ClientNotFoundException(idClient);
+				}
 			}else {
-				throw new ClientNotFoundException(idClient);
+				throw new SeanceNotFoundException(idSeance);
 			}
-		}else {
-			throw new SeanceNotFoundException(idSeance);
 		}
 		return res;
 	}
 
 	@Override
-	public List<Seance> findByFilmNom(String titre) {
+	public List<Seance> findAllByFilmNom(String titre) {
 		// TODO Auto-generated method stub
 		List<Film> listFilm = filmService.findAllByTitre(titre);
 		List<Seance> listSeance = new ArrayList<Seance>();
@@ -73,5 +78,47 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 		}
 		return listSeance;
 	}
+	
+	@Override
+	public List<Seance> findAllByFilm(Film f) {
+		// TODO Auto-generated method stub
+		return this.repo.findAllByFilm(f);
+	}
 
+	@Override
+	public float recetteSeance(String id) {
+		// TODO Auto-generated method stub
+		Optional<Seance> maSeance = this.findById(id);
+		float recette = 0F;
+		if(maSeance.isPresent()) {
+			for(Assister assister : maSeance.get().getClients()) {
+				recette += assister.getPrix();
+			}
+		}
+		return recette;
+	}
+
+	@Override
+	public int placesSeance(String id) {
+		// TODO Auto-generated method stub
+		Optional<Seance> maSeance = this.repo.findById(id);
+		int places = 0;
+		if(maSeance.isPresent()) {
+			Optional<Salle> maSalle = Optional.ofNullable(maSeance.get().getSalle());
+			if(maSalle.isPresent()) {
+				places = maSalle.get().getPlace();
+				for (int i = 0; i < maSeance.get().getClients().size(); i++) {
+					places -= 1;
+				}
+			}
+		}
+		return places;
+	}
+
+	@Override
+	public List<Seance> findAllByCrenauxSeance(LocalDateTime min, LocalDateTime max) {
+		// TODO Auto-generated method stub
+		
+		return this.repo.findAllByDateBetween(min, max);
+	}
 }
