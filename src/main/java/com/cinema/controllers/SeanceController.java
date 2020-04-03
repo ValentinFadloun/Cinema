@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cinema.dto.AssisterDTO;
+import com.cinema.dto.SeanceDTO;
 import com.cinema.models.Seance;
 import com.cinema.services.SeanceService;
 
@@ -58,13 +60,28 @@ public class SeanceController {
 	}
 	
 	@PostMapping("{id}/assister/{uid}")
-	public void addAssister(@PathVariable String id,@PathVariable String uid) {
-		this.service.addClientToSeance(id, uid);
+	public AssisterDTO addAssister(@PathVariable String id,@PathVariable String uid) {
+		return this.service.addClientToSeanceV2(id, uid);
 	}
 	
 	@GetMapping("film/{titre}")
 	public List<Seance> findAllByFilmNom(@PathVariable String titre){
 		return this.service.findAllByFilmNom(titre);
+	}
+	
+	@GetMapping("film/genre/{genre}")
+	public List<Seance> findAllByFilmGenre(@PathVariable String genre){
+		return this.service.findAllByFilmGenre(genre);
+	}
+	
+	@GetMapping("film/age/{age}")
+	public List<Seance> findAllByFilmGenre(@PathVariable int age){
+		return this.service.findAllByFilmAge(age);
+	}
+	
+	@GetMapping("type/{type}")
+	public List<Seance> findAllByType(@PathVariable String type){
+		return this.service.findAllByType(type);
 	}
 	
 	@GetMapping("{id}/recette")
@@ -80,5 +97,10 @@ public class SeanceController {
 	@GetMapping("horaire/{min}/{max}")
 	public List<Seance> findAllByCrenauxSeance(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)LocalDateTime min, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)LocalDateTime max){
 		return this.service.findAllByCrenauxSeance(min,max);
+	}
+	
+	@GetMapping("chercher")
+	public List<Seance> findSeanceByDTO(@RequestBody SeanceDTO rechercheSeance){
+		return this.service.findSeanceByDTO(rechercheSeance);
 	}
 }

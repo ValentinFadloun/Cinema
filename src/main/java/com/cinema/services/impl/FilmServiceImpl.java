@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cinema.exceptions.NotFoundException;
+import com.cinema.models.Commentaire;
 import com.cinema.models.Film;
 import com.cinema.models.Seance;
 import com.cinema.repositories.FilmRepository;
@@ -29,6 +31,12 @@ public class FilmServiceImpl extends CRUDServiceImpl<Film> implements FilmServic
 		// TODO Auto-generated method stub
 		return this.repo.findAllByTitre(titre);
 	}
+	
+	@Override
+	public List<Film> findAllByGenre(String genre) {
+		// TODO Auto-generated method stub
+		return this.repo.findAllByGenre(genre);
+	}
 
 	@Override
 	public float recetteFilm(String id) {
@@ -40,6 +48,8 @@ public class FilmServiceImpl extends CRUDServiceImpl<Film> implements FilmServic
 			for (Seance seance : listSeance) {
 				recette += this.seanceService.recetteSeance(seance.getId());
 			}
+		}else {
+			throw new NotFoundException("Le film ",id);
 		}
 		return recette;
 	}
@@ -48,5 +58,17 @@ public class FilmServiceImpl extends CRUDServiceImpl<Film> implements FilmServic
 	public int findAgeLimite(Film f) {
 		// TODO Auto-generated method stub
 		return f.getAgeLimite();
+	}
+
+	@Override
+	public List<Film> findAllByAge(int age) {
+		// TODO Auto-generated method stub
+		return this.repo.findAllByAgeLimiteLessThan(age);
+	}
+
+	@Override
+	public Commentaire addCommentaire(int note, String commentaire) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

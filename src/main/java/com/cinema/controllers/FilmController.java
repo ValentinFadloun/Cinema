@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cinema.models.Commentaire;
 import com.cinema.models.Film;
 import com.cinema.services.FilmService;
 
@@ -63,5 +64,10 @@ public class FilmController {
 	@GetMapping("{id}/recette")
 	public float recetteFilm(@PathVariable String id) {
 		return this.service.recetteFilm(id);
+	}
+	
+	@PostMapping("/commentaire")
+	public Commentaire addCommentaire(@RequestBody int note, @RequestBody String commentaire) {
+		return this.service.addCommentaire(note,commentaire);
 	}
 }

@@ -7,9 +7,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.cinema.models.Film;
 import com.cinema.models.Seance;
+import com.cinema.repositories.impl.SeanceRepositoryCustom;
 
-public interface SeanceRepository extends MongoRepository<Seance, String> {
+public interface SeanceRepository extends MongoRepository<Seance, String>, SeanceRepositoryCustom {
 	
 	public List<Seance> findAllByFilm(Film f);
+	public List<Seance> findAllByType(String type);
 	public List<Seance> findAllByDateBetween(LocalDateTime min,LocalDateTime max);
 }

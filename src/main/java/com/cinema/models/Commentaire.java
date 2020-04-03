@@ -3,15 +3,18 @@ package com.cinema.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-//Voiture est la pour me rappeler reactivemongo
-
-@Data
 @Document
-public class Voiture {
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Commentaire {
+	
 	@Id
 	private String id;
-	private String nom;
+	private float note;
+	private String commentaire;
 }

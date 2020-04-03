@@ -7,8 +7,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.cinema.exceptions.ClientNotFoundException;
-import com.cinema.exceptions.SeanceNotFoundException;
+
+import com.cinema.dto.AssisterDTO;
+import com.cinema.dto.SeanceDTO;
+import com.cinema.exceptions.ClientForbiddenException;
+import com.cinema.exceptions.SeanceForbiddenException;
+import com.cinema.exceptions.NotFoundException;
 import com.cinema.models.Assister;
 import com.cinema.models.Client;
 import com.cinema.models.Film;
@@ -18,7 +22,6 @@ import com.cinema.repositories.SeanceRepository;
 import com.cinema.services.AssisterService;
 import com.cinema.services.ClientService;
 import com.cinema.services.FilmService;
-import com.cinema.services.SalleService;
 import com.cinema.services.SeanceService;
 import com.cinema.services.crud.impl.CRUDServiceImpl;
 
@@ -31,8 +34,6 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 	private ClientService clientService;
 	@Autowired
 	private FilmService filmService;
-	@Autowired
-	private SalleService salleService;
 	@Autowired
 	private SeanceRepository repo;
 	
@@ -49,20 +50,61 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 			if(seance.isPresent()) {
 				List<Assister> listClient = seance.get().getClients();
 				Optional<Client> client = clientService.findById(idClient);
-				if(client.isPresent() && clientService.findClientAge(client.get()) > filmService.findAgeLimite(seance.get().getFilm())) {
-					Assister assister = new Assister();
-					assister.setClient(client.get());
-					assisterService.setPrix(seance.get(), client.get(), assister);
-					listClient.add(assister);
-					seance.get().setClients(listClient);
-					this.update(seance.get());
-					res = seance.get();
+				if(client.isPresent()) {
+					if(clientService.findClientAge(client.get()) > filmService.findAgeLimite(seance.get().getFilm())) {
+						Assister assister = new Assister();
+						assister.setClient(client.get());
+						assisterService.setPrix(seance.get(), client.get(), assister);
+						listClient.add(assister);
+						seance.get().setClients(listClient);
+						this.update(seance.get());
+						res = seance.get();
+					}else {
+						throw new ClientForbiddenException(idClient);
+					}
 				}else {
-					throw new ClientNotFoundException(idClient);
+					throw new NotFoundException("Le client ",idClient);
 				}
 			}else {
-				throw new SeanceNotFoundException(idSeance);
+				throw new NotFoundException("La seance ",idSeance);
 			}
+		}else {
+			throw new SeanceForbiddenException(idSeance);
+		}
+		return res;
+	}
+	
+
+	@Override
+	public AssisterDTO addClientToSeanceV2(String idSeance, String idClient) {
+		AssisterDTO res = new AssisterDTO();
+		if(this.placesSeance(idSeance) > 0) {
+			Optional<Seance> seance = this.findById(idSeance);
+			if(seance.isPresent()) {
+				List<Assister> listClient = seance.get().getClients();
+				Optional<Client> client = clientService.findById(idClient);
+				if(client.isPresent()) {
+					if(clientService.findClientAge(client.get()) > filmService.findAgeLimite(seance.get().getFilm())) {
+						Assister assister = new Assister();
+						assister.setClient(client.get());
+						assisterService.setPrix(seance.get(), client.get(), assister);
+						listClient.add(assister);
+						seance.get().setClients(listClient);
+						this.update(seance.get());
+						res.setHoraire(seance.get().getDate());
+						res.setFilm(seance.get().getFilm());
+						res.setPrix(assister.getPrix());
+					}else {
+						throw new ClientForbiddenException(idClient);
+					}
+				}else {
+					throw new NotFoundException("Le client ",idClient);
+				}
+			}else {
+				throw new NotFoundException("La seance ",idSeance);
+			}
+		}else {
+			throw new SeanceForbiddenException(idSeance);
 		}
 		return res;
 	}
@@ -73,6 +115,7 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 		List<Film> listFilm = filmService.findAllByTitre(titre);
 		List<Seance> listSeance = new ArrayList<Seance>();
 		for (Film f : listFilm) {
+			System.out.println(f);
 			List<Seance> listSeanceFilm = this.repo.findAllByFilm(f);
 			listSeance.addAll(listSeanceFilm);
 		}
@@ -80,9 +123,37 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 	}
 	
 	@Override
+	public List<Seance> findAllByFilmGenre(String genre) {
+		// TODO Auto-generated method stub
+		List<Seance> seances = new ArrayList<Seance>();
+		List<Film> films = this.filmService.findAllByGenre(genre);
+		for (Film film : films) {
+			seances.addAll(this.repo.findAllByFilm(film));
+		}
+		return seances;
+	}
+
+	@Override
+	public List<Seance> findAllByFilmAge(int age) {
+		// TODO Auto-generated method stub
+		List<Seance> seances = new ArrayList<Seance>();
+		List<Film> films = this.filmService.findAllByAge(age);
+		for (Film film : films) {
+			seances.addAll(this.repo.findAllByFilm(film));
+		}
+		return seances;
+	}
+	
+	@Override
 	public List<Seance> findAllByFilm(Film f) {
 		// TODO Auto-generated method stub
 		return this.repo.findAllByFilm(f);
+	}
+	
+	@Override
+	public List<Seance> findAllByType(String type) {
+		// TODO Auto-generated method stub
+		return this.repo.findAllByType(type);
 	}
 
 	@Override
@@ -94,6 +165,8 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 			for(Assister assister : maSeance.get().getClients()) {
 				recette += assister.getPrix();
 			}
+		}else {
+			throw new NotFoundException("La seance ",id);
 		}
 		return recette;
 	}
@@ -110,7 +183,11 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 				for (int i = 0; i < maSeance.get().getClients().size(); i++) {
 					places -= 1;
 				}
+			}else {
+				throw new NotFoundException("La salle ",id);
 			}
+		}else {
+			throw new NotFoundException("La seance ",id);
 		}
 		return places;
 	}
@@ -120,5 +197,11 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 		// TODO Auto-generated method stub
 		
 		return this.repo.findAllByDateBetween(min, max);
+	}
+
+	@Override
+	public List<Seance> findSeanceByDTO(SeanceDTO rechercheSeance) {
+		// TODO Auto-generated method stub
+		return this.repo.findSeanceByDTO(rechercheSeance);
 	}
 }
