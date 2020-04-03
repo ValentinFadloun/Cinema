@@ -13,5 +13,5 @@ public interface FilmService extends CRUDService<Film>{
 	public List<Film> findAllByAge(int age);
 	public float recetteFilm(String id);
 	public int findAgeLimite(Film f);
-	public Commentaire addCommentaire(int note, String commentaire);
+	public Commentaire addCommentaire(Commentaire commentaire);
 }

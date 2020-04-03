@@ -11,7 +11,9 @@ import com.cinema.models.Commentaire;
 import com.cinema.models.Film;
 import com.cinema.models.Seance;
 import com.cinema.repositories.FilmRepository;
+import com.cinema.services.CommentaireService;
 import com.cinema.services.FilmService;
+import com.cinema.services.SeanceService;
 import com.cinema.services.crud.impl.CRUDServiceImpl;
 
 @Service
@@ -20,7 +22,9 @@ public class FilmServiceImpl extends CRUDServiceImpl<Film> implements FilmServic
 	@Autowired
 	private FilmRepository repo;
 	@Autowired
-	private SeanceServiceImpl seanceService;
+	private SeanceService seanceService;
+	@Autowired
+	private CommentaireService commentaireService;
 
 	public FilmServiceImpl(FilmRepository repo) {
 		super(repo);
@@ -67,8 +71,8 @@ public class FilmServiceImpl extends CRUDServiceImpl<Film> implements FilmServic
 	}
 
 	@Override
-	public Commentaire addCommentaire(int note, String commentaire) {
+	public Commentaire addCommentaire(Commentaire commentaire) {
 		// TODO Auto-generated method stub
-		return null;
+		return this.commentaireService.save(commentaire);
 	}
 }

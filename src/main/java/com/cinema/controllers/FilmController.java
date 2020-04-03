@@ -67,7 +67,7 @@ public class FilmController {
 	}
 	
 	@PostMapping("/commentaire")
-	public Commentaire addCommentaire(@RequestBody int note, @RequestBody String commentaire) {
-		return this.service.addCommentaire(note,commentaire);
+	public Commentaire addCommentaire(@RequestBody Commentaire commentaire) {
+		return this.service.addCommentaire(commentaire);
 	}
 }

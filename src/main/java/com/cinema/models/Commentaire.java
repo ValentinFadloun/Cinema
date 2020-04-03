@@ -1,6 +1,7 @@
 package com.cinema.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -17,4 +18,6 @@ public class Commentaire {
 	private String id;
 	private float note;
 	private String commentaire;
+	@DBRef
+	private Film film;
 }
