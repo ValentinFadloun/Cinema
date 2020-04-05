@@ -1,5 +1,11 @@
 package com.cinema.services.impl;
 
+/**
+ * 
+ * @author Valentin Fadloun
+ *
+ **/
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,29 +31,50 @@ import com.cinema.services.FilmService;
 import com.cinema.services.SeanceService;
 import com.cinema.services.crud.impl.CRUDServiceImpl;
 
+/**
+ * 
+ * Création de la classe Service pour les Seances qui implément l'interface Seance Service
+ *
+ */
 @Service
 public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements SeanceService {
 
+	/*
+	 * Déclaration des variables permettant d'accéeder au Repository de Seance et aux Services nécessaire
+	 */
+	@Autowired
+	private SeanceRepository repo;
 	@Autowired
 	private AssisterService assisterService;
 	@Autowired
 	private ClientService clientService;
 	@Autowired
 	private FilmService filmService;
-	@Autowired
-	private SeanceRepository repo;
 	
+	/**
+	 * Constructeur permettant de donner le repository utilisé au CRUD Général
+	 * @param repo
+	 */
 	public SeanceServiceImpl(SeanceRepository repo) {
 		super(repo);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Méthode permettant d'ajouter un client a une seance.
+	 * Elle va verifier si la seance existe puis si elle a encore des places,
+	 * Elle va ensuite cherche le client et verifier si il existe ainsi que si il a l'age minimum necessaire pour regarder le film
+	 * Enfin elle ajoute le client en lui definissant un prix de seance 
+	 * Retourne une seance et est donc une ancienne version (on ne veux pas afficher toute le seance)
+	 * @deprecated -> addClientToSeanceV2
+	 * @param idSeance, idClient
+	 * @return Seance
+	 */
 	@Override
 	public Seance addClientToSeance(String idSeance, String idClient) {
 		Seance res = null;
-		if(this.placesSeance(idSeance) > 0) {
-			Optional<Seance> seance = this.findById(idSeance);
-			if(seance.isPresent()) {
+		Optional<Seance> seance = this.findById(idSeance);
+		if(seance.isPresent()) {
+			if(this.placesSeance(idSeance) > 0) {
 				List<Assister> listClient = seance.get().getClients();
 				Optional<Client> client = clientService.findById(idClient);
 				if(client.isPresent()) {
@@ -66,15 +93,24 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 					throw new NotFoundException("Le client ",idClient);
 				}
 			}else {
-				throw new NotFoundException("La seance ",idSeance);
+				throw new SeanceForbiddenException(idSeance);
 			}
 		}else {
-			throw new SeanceForbiddenException(idSeance);
+			throw new NotFoundException("La seance ",idSeance);
 		}
 		return res;
 	}
 	
-
+	/**
+	 * Méthode permettant d'ajouter un client a une seance.
+	 * Elle va verifier si la seance existe puis si elle a encore des places,
+	 * Elle va ensuite cherche le client et verifier si il existe ainsi que si il a l'age minimum necessaire pour regarder le film
+	 * Enfin elle ajoute le client en lui definissant un prix de seance 
+	 * Puis crée un objet assister DTO permettant de ne renvoyer que les informations necessaire
+	 * Nouvelle methode remplacant addClientToSeance
+	 * @param idSeance, idClient
+	 * @return AssisterDTO
+	 */
 	@Override
 	public AssisterDTO addClientToSeanceV2(String idSeance, String idClient) {
 		AssisterDTO res = new AssisterDTO();
@@ -109,22 +145,31 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 		return res;
 	}
 
+	/**
+	 * Méthode permettant de chercher toutes les seances en fonction du titre de leurs film
+	 * Elle va chercher tout les films dont le titre est celui demandé puis cherche les seances avec ces films
+	 * @param titre
+	 * @return List<Seance>
+	 */
 	@Override
 	public List<Seance> findAllByFilmNom(String titre) {
-		// TODO Auto-generated method stub
 		List<Film> listFilm = filmService.findAllByTitre(titre);
 		List<Seance> listSeance = new ArrayList<Seance>();
-		for (Film f : listFilm) {
-			System.out.println(f);
-			List<Seance> listSeanceFilm = this.repo.findAllByFilm(f);
+		for (Film film : listFilm) {
+			List<Seance> listSeanceFilm = this.repo.findAllByFilm(film);
 			listSeance.addAll(listSeanceFilm);
 		}
 		return listSeance;
 	}
 	
+	/**
+	 * Méthode permettant de chercher toutes les seances en fonction du genre de leurs film
+	 * Elle va chercher tout les films dont le genre est celui demandé puis cherche les seances avec ces films
+	 * @param genre
+	 * @return List<Seance>
+	 */
 	@Override
 	public List<Seance> findAllByFilmGenre(String genre) {
-		// TODO Auto-generated method stub
 		List<Seance> seances = new ArrayList<Seance>();
 		List<Film> films = this.filmService.findAllByGenre(genre);
 		for (Film film : films) {
@@ -133,9 +178,14 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 		return seances;
 	}
 
+	/**
+	 * Méthode permettant de chercher toutes les seances en fonction de l'age limite de leurs film
+	 * Elle va chercher tout les films dont l'age limite correspond celui demandé puis cherche les seances avec ces films
+	 * @param age
+	 * @return List<Seance>
+	 */
 	@Override
 	public List<Seance> findAllByFilmAge(int age) {
-		// TODO Auto-generated method stub
 		List<Seance> seances = new ArrayList<Seance>();
 		List<Film> films = this.filmService.findAllByAge(age);
 		for (Film film : films) {
@@ -144,21 +194,34 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 		return seances;
 	}
 	
+	/**
+	 * Méthode permettant de chercher toutes les seances en fonction d'un film
+	 * @param film
+	 * @return List<Seance>
+	 */
 	@Override
-	public List<Seance> findAllByFilm(Film f) {
-		// TODO Auto-generated method stub
-		return this.repo.findAllByFilm(f);
+	public List<Seance> findAllByFilm(Film film) {
+		return this.repo.findAllByFilm(film);
 	}
 	
+	/**
+	 * Méthode permettant de chercher toutes les seances en fonction du type de seance
+	 * @param type
+	 * @return List<Seance>
+	 */
 	@Override
 	public List<Seance> findAllByType(String type) {
-		// TODO Auto-generated method stub
 		return this.repo.findAllByType(type);
 	}
 
+	/**
+	 * Méthode permettant trouver les recettes d'une seance
+	 * Elle parcours toutes les personnes qui ont assisté a la seance et fais la somme du prix de leur billet
+	 * @param id
+	 * @return float
+	 */
 	@Override
 	public float recetteSeance(String id) {
-		// TODO Auto-generated method stub
 		Optional<Seance> maSeance = this.findById(id);
 		float recette = 0F;
 		if(maSeance.isPresent()) {
@@ -171,9 +234,15 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 		return recette;
 	}
 
+	/**
+	 * Méthode permettant de chercher les places restante pour un seance donnée.
+	 * Elle test si la seance existe bien puis va chercher la salle qui lui correspond en verifiant son existance
+	 * Enfin elle parcours le nombre de places déja acheter et le retire au nombre total de places de la salle
+	 * @param id
+	 * @return int
+	 */
 	@Override
 	public int placesSeance(String id) {
-		// TODO Auto-generated method stub
 		Optional<Seance> maSeance = this.repo.findById(id);
 		int places = 0;
 		if(maSeance.isPresent()) {
@@ -192,16 +261,23 @@ public class SeanceServiceImpl extends CRUDServiceImpl<Seance> implements Seance
 		return places;
 	}
 
+	/**
+	 * Méthode permettant de chercher toutes les seances en fonction d'un creneau horaire
+	 * @param min, max
+	 * @return List<Seance>
+	 */
 	@Override
 	public List<Seance> findAllByCrenauxSeance(LocalDateTime min, LocalDateTime max) {
-		// TODO Auto-generated method stub
-		
 		return this.repo.findAllByDateBetween(min, max);
 	}
 
+	/**
+	 * Méthode permettant de chercher toutes les seances en fonction de différents critères
+	 * @param rechercheSeance
+	 * @return List<Seance>
+	 */
 	@Override
 	public List<Seance> findSeanceByDTO(SeanceDTO rechercheSeance) {
-		// TODO Auto-generated method stub
 		return this.repo.findSeanceByDTO(rechercheSeance);
 	}
 }

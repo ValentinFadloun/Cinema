@@ -1,5 +1,11 @@
 package com.cinema.services.impl;
 
+/**
+ * 
+ * @author Valentin Fadloun
+ *
+ **/
+
 import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
@@ -10,14 +16,28 @@ import com.cinema.repositories.AssisterRepository;
 import com.cinema.services.AssisterService;
 import com.cinema.services.crud.impl.CRUDServiceImpl;
 
+/**
+ * 
+ * Création de la classe Service pour les Assister qui implément l'interface Assister Service
+ *
+ */
+
 @Service
 public class AssisterServiceImpl extends CRUDServiceImpl<Assister> implements AssisterService {
 
+	/**
+	 * Constructeur permettant de donner le repository utilisé au CRUD Général
+	 * @param repo
+	 */
 	public AssisterServiceImpl(AssisterRepository repo) {
 		super(repo);
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Methode permettant de fixer le prix du ticket en fonction du client.
+	 * La méthode test l'age de la personne, si elle est étudiante et quel type de film elle va voir
+	 * @param seance, client, assister
+	 */
 	@Override
 	public void setPrix(Seance seance, Client client, Assister assister) {
 		float prix = 10;
