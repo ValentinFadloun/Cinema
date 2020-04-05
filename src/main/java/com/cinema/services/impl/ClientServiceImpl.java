@@ -42,6 +42,7 @@ public class ClientServiceImpl extends CRUDServiceImpl<Client> implements Client
 	/**
 	 * Methode permettant de chercher tout les clients en fonction d'un nom
 	 * @param nom
+	 * @return List<Client>
 	 */
 	@Override
 	public List<Client> findAllByNom(String nom) {
@@ -51,6 +52,7 @@ public class ClientServiceImpl extends CRUDServiceImpl<Client> implements Client
 	/**
 	 * Methode permettant de trouver l'age d'un client
 	 * @param client
+	 * @return int
 	 */
 	@Override
 	public int findClientAge(Client client) {

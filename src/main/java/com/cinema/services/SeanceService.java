@@ -1,5 +1,8 @@
 package com.cinema.services;
 
+/**
+ * @author Valentin Fadloun
+ */
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -9,6 +12,12 @@ import com.cinema.models.Film;
 import com.cinema.models.Seance;
 import com.cinema.services.crud.CRUDService;
 
+/**
+ * 
+ * Création de l'interface Service pour les Seances
+ * Elle permet de définir les méthodes spécifique a Seance qui vont etre utilisé dans la classe services
+ *
+ */
 public interface SeanceService extends CRUDService<Seance>{
 	
 	public Seance addClientToSeance(String idSeance, String idClient);

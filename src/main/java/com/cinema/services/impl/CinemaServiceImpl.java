@@ -48,6 +48,7 @@ public class CinemaServiceImpl extends CRUDServiceImpl<Cinema> implements Cinema
 	 * Methode permettant la création d'un cinema ainsi que de ses salles.
 	 * Elle va récuperer le cinema dans un cinemaDTO puis ajouter toutes les salles en définissant a quel cinema elles appartiennes (celui envoyé)
 	 * @param cinema
+	 * @return CinemaDTO
 	 */
 	@Override
 	public CinemaDTO saveCinema(CinemaDTO cinema) {

@@ -42,6 +42,7 @@ public class CommentaireServiceImpl extends CRUDServiceImpl<Commentaire> impleme
 	/**
 	 * Methode permettant de calculer la moyenne d'un film 
 	 * @param film
+	 * @return float
 	 */
 	@Override
 	public float filmMoyenne(Film film) {
