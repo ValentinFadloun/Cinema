@@ -70,4 +70,9 @@ public class FilmController {
 	public Commentaire addCommentaire(@RequestBody Commentaire commentaire) {
 		return this.service.addCommentaire(commentaire);
 	}
+	
+	@GetMapping("/commentaire/moyenne")
+	public List<Film> getMoyenne(@RequestBody List<Film> listFilm) {
+		return this.service.sortAllByNote(listFilm);
+	}
 }

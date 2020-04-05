@@ -1,5 +1,12 @@
 package com.cinema.services.impl;
 
+/**
+ * 
+ * @author Valentin Fadloun
+ *
+ **/
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,19 +39,16 @@ public class FilmServiceImpl extends CRUDServiceImpl<Film> implements FilmServic
 
 	@Override
 	public List<Film> findAllByTitre(String titre) {
-		// TODO Auto-generated method stub
 		return this.repo.findAllByTitre(titre);
 	}
 	
 	@Override
 	public List<Film> findAllByGenre(String genre) {
-		// TODO Auto-generated method stub
 		return this.repo.findAllByGenre(genre);
 	}
 
 	@Override
 	public float recetteFilm(String id) {
-		// TODO Auto-generated method stub
 		Optional<Film> monFilm = this.repo.findById(id);
 		float recette = 0F;
 		if(monFilm.isPresent()) {
@@ -60,19 +64,46 @@ public class FilmServiceImpl extends CRUDServiceImpl<Film> implements FilmServic
 
 	@Override
 	public int findAgeLimite(Film f) {
-		// TODO Auto-generated method stub
 		return f.getAgeLimite();
 	}
 
 	@Override
 	public List<Film> findAllByAge(int age) {
-		// TODO Auto-generated method stub
 		return this.repo.findAllByAgeLimiteLessThan(age);
 	}
 
 	@Override
 	public Commentaire addCommentaire(Commentaire commentaire) {
-		// TODO Auto-generated method stub
 		return this.commentaireService.save(commentaire);
+	}
+	
+	@Override
+	public List<Film> bubbleSort(List<Film> listFilm, List<Float> listMoyenne){
+		boolean fini = true;
+		while (fini) {
+			fini = false;
+			for(int i = 0; i < listFilm.size()-1; i++) {
+				if(listMoyenne.get(i) < listMoyenne.get(i+1)) {
+					fini = true;
+					Film memoireFilm = listFilm.get(i);
+					listFilm.set(i, listFilm.get(i+1));
+					listFilm.set(i+1, memoireFilm);
+					float memoireMoyenne = listMoyenne.get(i);
+					listMoyenne.set(i, listMoyenne.get(i+1));
+					listMoyenne.set(i+1, memoireMoyenne);
+				}
+			}
+		}
+		return listFilm;
+	}
+
+	@Override
+	public List<Film> sortAllByNote(List<Film> listFilm) {
+		List<Float> listMoyenne = new ArrayList<Float>();
+		for(Film film : listFilm) {
+			listMoyenne.add(this.commentaireService.filmMoyenne(film));
+		}
+		listFilm = this.bubbleSort(listFilm, listMoyenne);
+		return listFilm;
 	}
 }

@@ -14,4 +14,6 @@ public interface FilmService extends CRUDService<Film>{
 	public float recetteFilm(String id);
 	public int findAgeLimite(Film f);
 	public Commentaire addCommentaire(Commentaire commentaire);
+	public List<Film> sortAllByNote(List<Film> listFilm);
+	public List<Film> bubbleSort(List<Film> listFilm, List<Float> listMoyenne);
 }
