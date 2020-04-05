@@ -35,18 +35,18 @@ public class SeanceController {
 	private SeanceService service;
 	
 	@PostMapping("")
-	public Seance saveSeance(@RequestBody Seance entity) {
-		return this.service.save(entity);
+	public Seance saveSeance(@RequestBody Seance seance) {
+		return this.service.save(seance);
 	}
 	
 	@PutMapping("")
-	public Seance updateSeance(@RequestBody Seance s) {
-		return this.service.update(s);
+	public Seance updateSeance(@RequestBody Seance seance) {
+		return this.service.update(seance);
 	}
 	
 	@DeleteMapping("")
-	public void deleteSeance(@RequestBody Seance s) {
-		this.service.delete(s);
+	public void deleteSeance(@RequestBody Seance seance) {
+		this.service.delete(seance);
 	}
 	
 	@DeleteMapping("{id}")

@@ -25,7 +25,7 @@ public interface SeanceService extends CRUDService<Seance>{
 	public List<Seance> findAllByFilmNom(String titre);
 	public List<Seance> findAllByFilmGenre(String genre);
 	public List<Seance> findAllByFilmAge(int age);
-	public List<Seance> findAllByFilm(Film f);
+	public List<Seance> findAllByFilm(Film film);
 	public List<Seance> findAllByType(String type);
 	public float recetteSeance(String id);
 	public int placesSeance(String id);

@@ -16,5 +16,5 @@ import com.cinema.services.crud.CRUDService;
  */
 public interface CommentaireService extends CRUDService<Commentaire>{
 
-	public float filmMoyenne(Film f);
+	public float filmMoyenne(Film film);
 }

@@ -9,5 +9,5 @@ import com.cinema.models.Film;
 
 public interface CommentaireRepository extends MongoRepository<Commentaire, String>{
 
-	public List<Commentaire> findAllByFilm(Film f);
+	public List<Commentaire> findAllByFilm(Film film);
 }

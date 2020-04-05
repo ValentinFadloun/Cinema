@@ -31,18 +31,18 @@ public class ClientController {
 	private ClientService service;
 	
 	@PostMapping("")
-	public Client saveClient(@RequestBody Client entity) {
-		return this.service.save(entity);
+	public Client saveClient(@RequestBody Client client) {
+		return this.service.save(client);
 	}
 	
 	@PutMapping("")
-	public Client updateClient(@RequestBody Client c) {
-		return this.service.update(c);
+	public Client updateClient(@RequestBody Client client) {
+		return this.service.update(client);
 	}
 	
 	@DeleteMapping("")
-	public void deleteClient(@RequestBody Client c) {
-		this.service.delete(c);
+	public void deleteClient(@RequestBody Client client) {
+		this.service.delete(client);
 	}
 	
 	@DeleteMapping("{id}")

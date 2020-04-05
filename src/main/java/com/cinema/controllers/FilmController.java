@@ -32,18 +32,18 @@ public class FilmController {
 	private FilmService service;
 	
 	@PostMapping("")
-	public Film saveFilm(@RequestBody Film entity) {
-		return this.service.save(entity);
+	public Film saveFilm(@RequestBody Film film) {
+		return this.service.save(film);
 	}
 	
 	@PutMapping("")
-	public Film updateFilm(@RequestBody Film f) {
-		return this.service.update(f);
+	public Film updateFilm(@RequestBody Film film) {
+		return this.service.update(film);
 	}
 	
 	@DeleteMapping("")
-	public void deleteFilm(@RequestBody Film f) {
-		this.service.delete(f);
+	public void deleteFilm(@RequestBody Film film) {
+		this.service.delete(film);
 	}
 	
 	@DeleteMapping("{id}")
