@@ -12,6 +12,11 @@ import com.cinema.dto.CinemaDTO;
 import com.cinema.models.Cinema;
 import com.cinema.services.CinemaService;
 
+/**
+ * 
+ * Création de la classe Controller pour les Cinemas qui permet de définir les routes de l'api
+ *
+ */
 @RestController
 @CrossOrigin
 @RequestMapping("cinemas")

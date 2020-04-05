@@ -18,6 +18,13 @@ public class SeanceRepositoryCustomImpl implements SeanceRepositoryCustom {
 	@Autowired
 	private MongoTemplate template;
 	
+	/*
+	 * Methode permettant de faire une recherche dans la Base de Donnée
+	 * Elle peux chercher un fonction du genre et de l'age limite du film, de la plage horaire de la seance et du type de seance
+	 * Elle crée un requette a la Base de Donne sur la quel viens s'ajouter des critère en fonction de la présence ou non de ces derniers.
+	 * @param seance
+	 * @return List<Seance>
+	 */
 	@Override
 	public List<Seance> findSeanceByDTO(SeanceDTO seance) {
 		// TODO Auto-generated method stub

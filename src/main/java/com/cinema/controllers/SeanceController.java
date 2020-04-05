@@ -21,6 +21,11 @@ import com.cinema.dto.SeanceDTO;
 import com.cinema.models.Seance;
 import com.cinema.services.SeanceService;
 
+/**
+ * 
+ * Création de la classe Controller pour les Seances qui permet de définir les routes de l'api
+ *
+ */
 @RestController
 @CrossOrigin
 @RequestMapping("seances")

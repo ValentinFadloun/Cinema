@@ -18,6 +18,11 @@ import com.cinema.models.Commentaire;
 import com.cinema.models.Film;
 import com.cinema.services.FilmService;
 
+/**
+ * 
+ * Création de la classe Controller pour les Films qui permet de définir les routes de l'api
+ *
+ */
 @RestController
 @CrossOrigin
 @RequestMapping("films")

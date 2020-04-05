@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cinema.models.Client;
 import com.cinema.services.ClientService;
 
+/**
+ * 
+ * Création de la classe Controller pour les Clients qui permet de définir les routes de l'api
+ *
+ */
 @RestController
 @CrossOrigin
 @RequestMapping("clients")

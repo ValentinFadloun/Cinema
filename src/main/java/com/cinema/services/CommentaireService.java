@@ -4,8 +4,6 @@ package com.cinema.services;
  * @author Valentin Fadloun
  */
 
-import java.util.List;
-
 import com.cinema.models.Commentaire;
 import com.cinema.models.Film;
 import com.cinema.services.crud.CRUDService;
