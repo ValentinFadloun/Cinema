@@ -61,6 +61,11 @@ public class FilmController {
 		return this.service.findAllByTitre(titre);
 	}
 	
+	@GetMapping("titre/{titre}/note")
+	public List<Film> findAllByTitreSortByNote(@PathVariable String titre){
+		return this.service.findAllByTitreSortByNote(titre);
+	}
+	
 	@GetMapping("{id}/recette")
 	public float recetteFilm(@PathVariable String id) {
 		return this.service.recetteFilm(id);
@@ -74,5 +79,10 @@ public class FilmController {
 	@GetMapping("/commentaire/moyenne")
 	public List<Film> getMoyenne(@RequestBody List<Film> listFilm) {
 		return this.service.sortAllByNote(listFilm);
+	}
+	
+	@GetMapping("/commentaire/moyenne/all")
+	public List<Film> findAllSortByNote() {
+		return this.service.sortAllFilmByNote();
 	}
 }

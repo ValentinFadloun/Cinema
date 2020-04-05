@@ -106,4 +106,16 @@ public class FilmServiceImpl extends CRUDServiceImpl<Film> implements FilmServic
 		listFilm = this.bubbleSort(listFilm, listMoyenne);
 		return listFilm;
 	}
+
+	@Override
+	public List<Film> findAllByTitreSortByNote(String titre) {
+		return this.sortAllByNote(this.findAllByTitre(titre));
+	}
+
+	@Override
+	public List<Film> sortAllFilmByNote() {
+		return this.sortAllByNote((List<Film>) this.findAll());
+	}
+	
+	
 }

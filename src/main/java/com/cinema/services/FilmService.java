@@ -16,4 +16,6 @@ public interface FilmService extends CRUDService<Film>{
 	public Commentaire addCommentaire(Commentaire commentaire);
 	public List<Film> sortAllByNote(List<Film> listFilm);
 	public List<Film> bubbleSort(List<Film> listFilm, List<Float> listMoyenne);
+	public List<Film> findAllByTitreSortByNote(String titre);
+	public List<Film> sortAllFilmByNote();
 }
